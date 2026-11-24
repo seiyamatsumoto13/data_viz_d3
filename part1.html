@@ -49,9 +49,31 @@
         // See https://d3js.org/d3-scale/linear#_linear
 
         // note: for-of is akin to a Python for-in loop
+
+        const xScale = d3.scaleLinear()
+        .domain([0, 10000000])
+        .range([0, 200]);
+
+        let i = 0;
+
         for (let city of cities) {
-          // Step 2: append a rect & text element for each one
+        div10.append("rect")
+            .attr("x", 0)
+            .attr("y", i * 20)
+            .attr("width", xScale(city.population))
+            .attr("height", 15)
+            .attr("fill", "black");
+
+        div10.append("text")
+            .attr("x", 3)
+            .attr("y", i * 20 + 10)
+            .attr("fill", "white")
+            .attr("font-size", 6)
+            .text(city.city);
+
+        i++;
         }
+
       </script>
     </section>
 
@@ -89,6 +111,31 @@
 
         // WRITE SOLUTION TO 1.1 BELOW
         d3.selectAll("rect");
+
+        const xScale11 = d3.scaleLinear()
+        .domain([0, 10000000])
+        .range([0, 200]);
+
+        // Create five bars
+        div11.selectAll("rect")
+        .data(cities)
+        .join("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 20)
+        .attr("width", d => xScale11(d.population))
+        .attr("height", 15)
+        .attr("fill", "black");
+
+        // Create five labels
+        div11.selectAll("text")
+        .data(cities)
+        .join("text")
+        .attr("x", 3)
+        .attr("y", (d, i) => i * 20 + 10)
+        .attr("fill", "white")
+        .attr("font-size", 6)
+        .text(d => d.city);
+
       </script>
     </section>
 
@@ -113,6 +160,51 @@
 
         // WRITE SOLUTION TO 1.2 BELOW
         // (you can copy/paste 1.1 to start this one)
+
+        const xScale12 = d3.scaleLinear()
+        .domain([0, 10000000])
+        .range([0, 125]);
+
+        // Bars
+        div12.selectAll("rect")
+        .data(cities)
+        .join("rect")
+        .attr("x", 55)
+        .attr("y", (d, i) => i * 16)
+        .attr("width", d => xScale12(d.population))
+        .attr("height", 11)
+        .attr("fill", "black");
+
+        // City labels
+        div12.selectAll(".city-label")
+        .data(cities)
+        .join("text")
+        .attr("class", "city-label")
+        .attr("x", 1)
+        .attr("y", (d, i) => i * 16 + 8)
+        .attr("font-size", 6)
+        .text(d => d.city);
+
+        // Population labels
+        div12.selectAll(".population-label")
+        .data(cities)
+        .join("text")
+        .attr("class", "population-label")
+        .attr("x", d => 57 + xScale12(d.population))
+        .attr("y", (d, i) => i * 16 + 8)
+        .attr("font-size", 6)
+        .text(d => (d.population / 1000000).toFixed(2) + "M");
+
+        // X-axis
+        const xAxis12 = d3.axisBottom(xScale12)
+        .ticks(5)
+        .tickFormat(d => d / 1000000);
+
+        div12.append("g")
+        .attr("transform", "translate(55, 82)")
+        .call(xAxis12)
+        .attr("font-size", 5);
+
       </script>
     </section>
 
@@ -149,7 +241,52 @@
          the element impacted by the event.
          */
         // WRITE SOLUTION TO 1.3 BELOW
-        // (you can copy/paste 1.2 to start this one)
+
+        const xScale13 = d3.scaleLinear()
+        .domain([0, 10000000])
+        .range([0, 125]);
+
+        // Bars
+        div13.selectAll("rect")
+        .data(cities)
+        .join("rect")
+        .attr("x", 55)
+        .attr("y", (d, i) => i * 16)
+        .attr("width", d => xScale13(d.population))
+        .attr("height", 11)
+        .attr("fill", "black")
+        .on("mouseover", onHover)
+        .on("mouseout", onMouseOut);
+
+        // City labels
+        div13.selectAll(".city-label")
+        .data(cities)
+        .join("text")
+        .attr("class", "city-label")
+        .attr("x", 1)
+        .attr("y", (d, i) => i * 16 + 8)
+        .attr("font-size", 6)
+        .text(d => d.city);
+
+        // Population labels
+        div13.selectAll(".population-label")
+        .data(cities)
+        .join("text")
+        .attr("class", "population-label")
+        .attr("x", d => 57 + xScale13(d.population))
+        .attr("y", (d, i) => i * 16 + 8)
+        .attr("font-size", 6)
+        .text(d => (d.population / 1000000).toFixed(2) + "M");
+
+        // Axis
+        const xAxis13 = d3.axisBottom(xScale13)
+        .ticks(5)
+        .tickFormat(d => d / 1000000);
+
+        div13.append("g")
+        .attr("transform", "translate(55, 82)")
+        .call(xAxis13)
+        .attr("font-size", 5);
 
         // Step 1
         // this is the start of a method that could be passed to on as described above.
@@ -157,11 +294,14 @@
           // gets the element where the event occurred
           // you'll need to add the behavior you want to happen
           // and attach this function to the mouseover event
-          d3.select(this);
-        }
+          d3.select(this).attr("fill", "orange");
+          }
 
         // Step 2
         // You will also need a function to handle the mouse exiting and attach that to "mouseout"
+        function onMouseOut(event, d) {
+        d3.select(this).attr("fill", "black");
+        }
       </script>
     </section>
   </body>
